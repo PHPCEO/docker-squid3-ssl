@@ -1,5 +1,4 @@
 #!/bin/sh
-docker build -t docker.balsamiq.com/squid3-ssl-debs - < Dockerfile.debs
 docker run -d --name squid3-ssl-debs docker.balsamiq.com/squid3-ssl-debs
 docker cp squid3-ssl-debs:squid3-ssl-debs.tar.gz .
 docker rm squid3-ssl-debs
