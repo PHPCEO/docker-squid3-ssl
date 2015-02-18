@@ -22,10 +22,10 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main" > /etc/apt/sources.l
     apt-get clean
 
 # Install packages
+ADD debs /tmp/debs
 RUN cd /tmp && \
-    curl -L https://github.com/fgrehm/squid3-ssl-docker/releases/download/v20140623/squid3-20140623.tgz | tar xvz && \
     dpkg -i debs/*.deb && \
-    rm -rf /tmp/debs && \
+    rm -rf debs && \
     apt-get clean
 
 # Create cache directory

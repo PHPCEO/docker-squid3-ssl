@@ -27,3 +27,4 @@ RUN sed -i 's/--enable-ecap/--enable-ecap --enable-ssl --enable-ssl-crtd/' /src/
 # Build debs
 RUN apt-get -y install devscripts
 RUN cd /src/squid3-3.3.8 && debuild -us -uc -b
+RUN cd /src && tar cvfz /squid3-ssl-debs.tar.gz *.deb
