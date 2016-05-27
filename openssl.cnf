@@ -10,11 +10,12 @@ tsa_policy2     = 1.2.3.4.5.6
 tsa_policy3     = 1.2.3.4.5.7
 
 [ req ]
-default_bits        = 1024
+default_bits        = 2048
 default_keyfile     = privkey.pem
 distinguished_name  = req_distinguished_name
 attributes          = req_attributes
 string_mask         = utf8only
+encrypt_key         = no
 
 [ req_distinguished_name ]
 0.organizationName  = <HOST>

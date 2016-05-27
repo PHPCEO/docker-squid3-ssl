@@ -1,2 +1,4 @@
 /debs/
 /squid3-ssl-debs.tar.gz
+/certs/
+.DS_Store
