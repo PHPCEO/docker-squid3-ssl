@@ -4,18 +4,21 @@ set -e
 
 # Generate a private key and a self-signed certificate.
 
-CERTS_DIR='/etc/squid3/certs'
-CONFIG='/etc/squid3/openssl.cnf'
+CERTS_DIR='/etc/squid/certs'
+CONFIG='/etc/squid/openssl.cnf'
 
 # Get domain name from config file.
 # Domain is used to name self-signed cert file.
 DOMAIN=$(grep commonName $CONFIG | cut -d'=' -f 2 | tr -d ' ')
 
 # Generate private key.
-openssl genrsa -out $CERTS_DIR/private.pem 1024
+openssl genrsa -out $CERTS_DIR/private.pem 2048
 
 # Generate cert signing request.
 openssl req -new \
+    -batch \
+    -nodes \
+    -sha256 \
     -key $CERTS_DIR/private.pem \
     -out $CERTS_DIR/proxy.csr \
     -config $CONFIG
@@ -27,6 +30,7 @@ openssl x509 -req \
     -in $CERTS_DIR/proxy.csr \
     -out $CERTS_DIR/$DOMAIN.crt \
     -extensions v3_req \
+    -sha256 \
     -extfile $CONFIG
 
 # Delete signing request.
