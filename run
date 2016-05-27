@@ -2,26 +2,27 @@
 
 set -e
 
-HOST=$(hostname -A | tr -d ' ')
+#HOST=$(hostname -A | tr -d ' ')
+new_hostname=${HOST_NAME:-"squid-ssl.docker"}
 
-sed -i "s|<HOST>|${HOST}|g" /etc/squid3/openssl.cnf
-sed -i "s|<HOST>|${HOST}|g" /etc/squid3/squid.conf
+sed -i "s|<HOST>|${new_hostname}|g" /etc/squid/openssl.cnf
+sed -i "s|<HOST>|${new_hostname}|g" /etc/squid/squid.conf
 
-mkdir -p /etc/squid3/certs
+mkdir -p /etc/squid/certs
 
-if ! [ -f "/etc/squid3/certs/${HOST}.crt" ]; then
+if ! [ -f "/etc/squid/certs/${new_hostname}.crt" ]; then
   /usr/local/bin/mk-certs
 fi
 
-chown -R proxy: /etc/squid3/certs
+chown -R proxy:proxy /etc/squid/certs
 
-cat "/etc/squid3/certs/${HOST}.crt"
+cat "/etc/squid/certs/${new_hostname}.crt"
 
-# /usr/sbin/squid3 -Nz
+# /usr/sbin/squid -Nz
 
-chown -R proxy: /var/cache/squid3
-chown -R proxy: /var/log/squid3
+chown -R proxy:proxy /var/cache/squid
+chown -R proxy:proxy /var/log/squid
 
-/usr/sbin/squid3 -Nz
+/usr/sbin/squid -Nz
 
-exec /usr/sbin/squid3 -Nd2
+exec /usr/sbin/squid -Nd2
