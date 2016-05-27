@@ -2,9 +2,12 @@
 # Build debian packages for Squid3, with SSL enabled.
 # http://www.squid-cache.org/
 
-FROM ubuntu:trusty
+FROM ubuntu:xenial
 MAINTAINER Fabio Rehm <fgrehm@gmail.com>
 
+ENV http_proxy http://192.168.64.5:33129
+ENV DEBIAN_FRONTEND=noninteractive
+RUN echo 'Acquire::http { Proxy "http://192.168.64.5:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 RUN echo "deb-src http://archive.ubuntu.com/ubuntu trusty main" >> /etc/apt/sources.list
 RUN echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/apt/sources.list
 RUN echo "deb-src http://security.ubuntu.com/ubuntu trusty-security main" >> /etc/apt/sources.list
@@ -13,18 +16,21 @@ RUN apt-get -y upgrade
 
 # Install build dependencies
 RUN apt-get -y install libssl-dev
-RUN apt-get -y build-dep squid3
+RUN apt-get -y build-dep squid3 openssh openssl
 
 # Download source
-RUN mkdir /src
-RUN cd /src && apt-get source squid3
-RUN apt-get build-dep openssh -y
-RUN apt-get build-dep openssl -y
+RUN mkdir /src && chmod 777 /src && \
+gpg --keyserver keyserver.ubuntu.com --recv-keys 27003A3F && \
+gpg --no-default-keyring -a --export 27003A3F | gpg --no-default-keyring --keyring ~/.gnupg/trustedkeys.gpg --import -
+WORKDIR /src
+RUN apt-get source squid3 --allow-unauthenticated
+# RUN cd /src && curl -SsL http://www.squid-cache.org/Versions/v3/3.5/squid3-3.5.12.tar.gz | tar xzvf - 
 
 # Edit debian/rules to build with SSL
-RUN sed -i 's/--enable-ecap/--enable-ecap --enable-ssl --enable-ssl-crtd/' /src/squid3-3.3.8/debian/rules
-
+RUN sed -i 's/--enable-ecap/--enable-ecap --enable-ssl --enable-ssl-crtd --with-openssl/' /src/squid3-3.5.12/debian/rules
 # Build debs
+WORKDIR /src/squid3-3.5.12
 RUN apt-get -y install devscripts
-RUN cd /src/squid3-3.3.8 && debuild -us -uc -b
-RUN cd /src && tar cvfz /squid3-ssl-debs.tar.gz *.deb
+RUN debuild -us -uc -b
+WORKDIR /src
+RUN tar cvfz /squid3-ssl-debs.tar.gz squid*.deb
