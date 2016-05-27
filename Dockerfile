@@ -1,5 +1,5 @@
 FROM ubuntu:xenial
-MAINTAINER Fabio Rehm <fgrehm@gmail.com>
+MAINTAINER Genevera <genevera.codes@gmail.com> (@genevera)
 
 
 ENV DEBIAN_FRONTEND=noninteractive
