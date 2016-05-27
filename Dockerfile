@@ -1,7 +1,7 @@
 FROM ubuntu:xenial
 MAINTAINER Fabio Rehm <fgrehm@gmail.com>
 
-ENV http_proxy http://192.168.64.5:33129
+
 ENV DEBIAN_FRONTEND=noninteractive
 RUN echo 'Acquire::http { Proxy "http://192.168.64.5:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main" >> /etc/apt/sources.list && \
