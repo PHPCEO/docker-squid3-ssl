@@ -17,7 +17,7 @@ build_debs:
 copy_debs:
 	@mkdir -p debs
 	docker run -v $(current_dir)/debs:/src/debs $(build_tag) /bin/sh -c 'cp /src/*.deb /src/debs/'
-	rm $(current_dir)/debs/squid3*.deb
+	rm -f $(current_dir)/debs/squid3*.deb
 
 release_debs:
 	sudo chown ${USER}:${USER} debs/*
