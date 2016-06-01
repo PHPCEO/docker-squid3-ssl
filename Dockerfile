@@ -2,6 +2,7 @@ FROM ubuntu:xenial
 MAINTAINER Genevera <genevera.codes@gmail.com> (@genevera)
 
 
+ENV TZ='America/New_York'
 ENV DEBIAN_FRONTEND=noninteractive
 RUN echo 'Acquire::http { Proxy "http://192.168.64.8:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main" >> /etc/apt/sources.list && \
@@ -42,10 +43,12 @@ RUN mkdir -p /etc/squid/certs \
 
 # Prepare configs and executable
 ADD squid.conf /etc/squid/squid.conf
+ADD squid.conf.extras /etc/squid/conf.d/extras.conf
 ADD openssl.cnf /etc/squid/openssl.cnf
 ADD mk-certs /usr/local/bin/mk-certs
 ADD run /usr/local/bin/run
 RUN chmod +x /usr/local/bin/run
+RUN cp /usr/share/zoneinfo/America/New_York /etc/timezone
 
 EXPOSE 3128
 CMD ["/usr/local/bin/run"]
