@@ -9,7 +9,7 @@ MAINTAINER Genevera <genevera.codes@gmail.com> (@genevera)
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ='America/New_York' 
 RUN cp /usr/share/zoneinfo/${TZ} /etc/localtime
-RUN echo "nameserver 172.21.0.1" > /etc/resolv.conf
+RUN echo "nameserver 172.18.0.1" > /etc/resolv.conf
 RUN echo 'Acquire::http { Proxy "http://apt-cacher-ng.docker:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 # RUN echo "deb-src http://archive.ubuntu.com/ubuntu trusty main" >> /etc/apt/sources.list
 # RUN echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/apt/sources.list

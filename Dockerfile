@@ -22,7 +22,10 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main" >> /etc/apt/sources.
                     libltdl7 \
                     libecap3 \
                     libnetfilter-conntrack3 \
-                    curl && \
+                    curl \
+                    expect \
+                    gawk \
+                    && \
     apt-get clean
 
 # Install packages
@@ -46,6 +49,7 @@ ADD squid.conf /etc/squid/squid.conf
 ADD squid.conf.extras /etc/squid/conf.d/extras.conf
 ADD openssl.cnf /etc/squid/openssl.cnf
 ADD mk-certs /usr/local/bin/mk-certs
+ADD tail_logs /usr/local/bin/tail_logs
 ADD run /usr/local/bin/run
 RUN chmod +x /usr/local/bin/run
 RUN cp /usr/share/zoneinfo/America/New_York /etc/timezone
