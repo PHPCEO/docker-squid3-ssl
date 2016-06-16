@@ -2,8 +2,9 @@ FROM ubuntu:xenial
 MAINTAINER Genevera <genevera.codes@gmail.com> (@genevera)
 
 
+ENV TZ='America/New_York'
 ENV DEBIAN_FRONTEND=noninteractive
-RUN echo 'Acquire::http { Proxy "http://192.168.64.5:3142"; };' >> /etc/apt/apt.conf.d/01proxy
+RUN echo 'Acquire::http { Proxy "http://192.168.64.8:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main" >> /etc/apt/sources.list && \
     echo "deb http://archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/apt/sources.list && \
     echo "deb http://security.ubuntu.com/ubuntu trusty-security main" >> /etc/apt/sources.list && \
@@ -21,7 +22,10 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main" >> /etc/apt/sources.
                     libltdl7 \
                     libecap3 \
                     libnetfilter-conntrack3 \
-                    curl && \
+                    curl \
+                    expect \
+                    gawk \
+                    && \
     apt-get clean
 
 # Install packages
@@ -42,10 +46,13 @@ RUN mkdir -p /etc/squid/certs \
 
 # Prepare configs and executable
 ADD squid.conf /etc/squid/squid.conf
+ADD squid.conf.extras /etc/squid/conf.d/extras.conf
 ADD openssl.cnf /etc/squid/openssl.cnf
 ADD mk-certs /usr/local/bin/mk-certs
+ADD tail_logs /usr/local/bin/tail_logs
 ADD run /usr/local/bin/run
 RUN chmod +x /usr/local/bin/run
+RUN cp /usr/share/zoneinfo/America/New_York /etc/timezone
 
 EXPOSE 3128
 CMD ["/usr/local/bin/run"]

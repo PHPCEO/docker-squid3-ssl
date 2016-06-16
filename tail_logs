@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -e
+
+rm tail_fifo &>/dev/null || true;
+mkfifo tail_fifo || true;
+unbuffer tail -F /var/log/squid/access*.log | gawk '{$1=strftime("%Y-%m-%d_%H:%M",$1)} {print}' > tail_fifo&
+tail -F /var/log/squid/cache.log > tail_fifo&
+cat < tail_fifo;
