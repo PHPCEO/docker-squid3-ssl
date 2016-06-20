@@ -1,10 +1,10 @@
-FROM ubuntu:xenial
+FROM quay.io/genevera/ubuntu:xenial-daily
 MAINTAINER Genevera <genevera.codes@gmail.com> (@genevera)
 
 
 ENV TZ='America/New_York'
 ENV DEBIAN_FRONTEND=noninteractive
-RUN echo 'Acquire::http { Proxy "http://192.168.64.8:3142"; };' >> /etc/apt/apt.conf.d/01proxy
+RUN echo 'Acquire::http { Proxy "http://apt-cacher-ng.docker:3142"; };' >> /etc/apt/apt.conf.d/01proxy
 RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main" >> /etc/apt/sources.list && \
     echo "deb http://archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/apt/sources.list && \
     echo "deb http://security.ubuntu.com/ubuntu trusty-security main" >> /etc/apt/sources.list && \
