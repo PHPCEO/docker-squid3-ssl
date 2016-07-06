@@ -3,15 +3,10 @@ MAINTAINER Genevera <genevera.codes@gmail.com> (@genevera)
 
 
 ENV TZ='America/New_York'
+ENV MAKEOPTS="-j2"
 ENV DEBIAN_FRONTEND=noninteractive
-RUN echo 'Acquire::http { Proxy "http://apt-cacher-ng.docker:3142"; };' >> /etc/apt/apt.conf.d/01proxy
-RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main" >> /etc/apt/sources.list && \
-    echo "deb http://archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/apt/sources.list && \
-    echo "deb http://security.ubuntu.com/ubuntu trusty-security main" >> /etc/apt/sources.list && \
-    echo "deb-src http://archive.ubuntu.com/ubuntu trusty main" >> /etc/apt/sources.list && \
-    echo "deb-src http://archive.ubuntu.com/ubuntu/ trusty-updates main" >> /etc/apt/sources.list && \
-    echo "deb-src http://security.ubuntu.com/ubuntu trusty-security main" >> /etc/apt/sources.list && \
-    apt-get update && \
+RUN echo 'Acquire::http { Proxy "http://apt-cacher-ng.docker:3142"; };' > /etc/apt/apt.conf.d/01proxy
+RUN apt-get update && \
     apt-get -y upgrade && \
     apt-get install -qq \
                     apache2 \
@@ -24,8 +19,7 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main" >> /etc/apt/sources.
                     libnetfilter-conntrack3 \
                     curl \
                     expect \
-                    gawk \
-                    && \
+                    gawk && \
     apt-get clean
 
 # Install packages
@@ -54,5 +48,6 @@ ADD run /usr/local/bin/run
 RUN chmod +x /usr/local/bin/run
 RUN cp /usr/share/zoneinfo/America/New_York /etc/timezone
 
-EXPOSE 3128
+EXPOSE 33128
+EXPOSE 33129
 CMD ["/usr/local/bin/run"]
