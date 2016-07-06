@@ -24,9 +24,9 @@ release_debs:
 	tar -zcvf squid-$(shell date +%Y%m%d).tgz debs/
 
 get_keys_install:
-	docker kill squid_ssl_proxy || true 
-	docker rm squid_ssl_proxy || true
-	docker run -d --restart=always --name=squid_ssl_proxy --hostname="squid_ssl_proxy" -e HOST="squid_ssl_proxy" -v /var/cache/squid:/var/cache/squid quay.io/genevera/squid3-ssl-proxy
+	docker kill squid-ssl-proxy || true 
+	docker rm squid-ssl-proxy || true
+	docker run -d --restart=always --name=squid-ssl-proxy --hostname=squid-ssl-proxy.docker -e HOST="squid-ssl-proxy.docker" -v /var/cache/squid:/var/cache/squid quay.io/genevera/squid3-ssl-proxy
 	./get_install_keys.sh
 	sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $(current_dir)/squid-ssl.docker.crt
 	mv $(current_dir)/squid-ssl.docker.crt ${current_dir}/certs/
