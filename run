@@ -26,4 +26,4 @@ chown -R proxy:proxy /var/log/squid
 
 /usr/sbin/squid -Nz
 
-exec /usr/sbin/squid -Nd2
+exec /usr/sbin/squid -Nd2cs
