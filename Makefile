@@ -2,7 +2,7 @@ current_dir:=$(shell pwd)
 build_tag = 'squid3-ssl-build'
 end_tag = 'quay.io/genevera/squid3-ssl-proxy'
 
-.PHONY: debs build_debs copy_debs
+.PHONY: debs build_debs copy_debs release_debs the_proxy_itself get_keys_install
 
 debs: build_debs copy_debs
 
