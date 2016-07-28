@@ -23,7 +23,7 @@ cat "/etc/squid/certs/${new_hostname}.crt"
 mkdir -p /var/cache/squid/squid_{1..4}
 chown -R proxy:proxy /var/cache/squid
 chown -R proxy:proxy /var/log/squid
-
+chmod gou+w /var/log/squid
 /usr/sbin/squid -Nz
 
 exec /usr/sbin/squid -Nd2cs
