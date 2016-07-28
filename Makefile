@@ -24,11 +24,14 @@ release_debs:
 	tar -zcvf squid-$(shell date +%Y%m%d).tgz debs/
 
 get_keys_install:
-	docker kill squid-ssl-proxy || true 
-	docker rm squid-ssl-proxy || true
+	docker kill -s KILL squid-ssl-proxy || true 
+	docker rm -fv squid-ssl-proxy || true
 	docker run -d --restart=always --name=squid-ssl-proxy --hostname=squid-ssl-proxy.docker -e HOST="squid-ssl-proxy.docker" -v /var/cache/squid:/var/cache/squid quay.io/genevera/squid3-ssl-proxy
 	./get_install_keys.sh
+	# add to system keychain
 	sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $(current_dir)/squid-ssl.docker.crt
+  # add to java keychain
+	if [[ -f ${JAVA_HOME}/jre/lib/security/cacerts ]]; then if [[ $(sudo keytool -list -keystore ${JAVA_HOME}/jre/lib/security/cacerts -storepass changeit | grep -c squid) -gt 0 ]]; then sudo keytool -delete -noprompt -alias squid -keystore ${JAVA_HOME}/jre/lib/security/cacerts -storepass changeit; fi; sudo keytool -import -noprompt -trustcacerts -alias squid -file $(current_dir)/squid-ssl.docker.crt -keystore ${JAVA_HOME}/jre/lib/security/cacerts -storepass changeit; fi;
 	mv $(current_dir)/squid-ssl.docker.crt ${current_dir}/certs/
 	mv $(current_dir)/private.pem ${current_dir}/certs/
 
